@@ -1,16 +1,44 @@
 # flutter_taller1
 
-A new Flutter project.
+## Descripción
+Este proyecto corresponde al **Taller 1** del curso de Flutter.  
+El objetivo es construir una pantalla básica en Flutter con `StatefulWidget`, evidenciando el uso de `setState()` y aplicando buenas prácticas de control de versiones con ramas en GitHub.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## Datos del estudiante
+- **Nombre completo:** Mario Ochoa  
+- **Código:** 12345  
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Requisitos cumplidos
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **AppBar dinámico:** título inicial `"Hola, Flutter"`, que cambia a `"¡Título cambiado!"` al presionar un botón.  
+- **SnackBar:** muestra el mensaje `"Título actualizado"` al cambiar el título.  
+- **Texto centrado:** nombre completo del estudiante.  
+- **Imágenes en Row:** 
+  - Una imagen con `Image.network()`.
+  - Una imagen con `Image.asset()`.
+- **ElevatedButton:** cambia el título con `setState()`.
+- **Widgets adicionales:**
+  - `Container` (con bordes, márgenes y color).
+  - `ListView` (lista con íconos y texto).
+- **Diseño visual:** uso de `Column`, `Row`, `SizedBox` y alineaciones.
+
+
+---
+
+## Pasos para ejecutar el proyecto
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/TU-USUARIO/flutter_taller1.git
+   cd flutter_taller1
+   ```
+2. Instala las dependencias:
+    ```bash
+    flutter pub get
+    ``` 
+3. Ejecuta la aplicación.
+   
