@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Taller 1',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -54,18 +54,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  String _title = "Hola, Flutter";
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+
+  void _cambiarTitulo() {
+  setState(() {
+    if (_title == "Hola, Flutter") {
+      _title = "¡Título cambiado!";
+    } else {
+      _title = "Hola, Flutter";
+    }
+  });
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text("Título actualizado")),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -83,40 +87,86 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(_title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            Container(
+              padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.blue[50],
+                border: Border.all(color: Colors.blue, width: 2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Text(
+                "Mario Ochoa Arango - 230222016",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
             ),
+
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.network('https://miro.medium.com/v2/resize:fit:1000/1*5-aoK8IBmXve5whBQM90GA.png',
+                  width: 150,
+                  height: 150,
+                ),
+                const SizedBox(width: 20),
+                Image.asset('assets/github.png',
+                  width: 150,
+                  height: 150,
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: _cambiarTitulo,
+              child: const Text('Cambiar Título', style: TextStyle(fontSize: 20)),
+            ),
+            
+            const SizedBox(height: 40),
+            SizedBox(
+              height: 200,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  Container(
+                    width: 160,
+                    color: Colors.red,
+                    child: const Center(child: Text('Elemento 1', style: TextStyle(color: Colors.white, fontSize: 20))),
+                  ),
+                  Container(
+                    width: 160,
+                    color: Colors.blue,
+                    child: const Center(child: Text('Elemento 2', style: TextStyle(color: Colors.white, fontSize: 20))),
+                  ),
+                  Container(
+                    width: 160,
+                    color: Colors.green,
+                    child: const Center(child: Text('Elemento 3', style: TextStyle(color: Colors.white, fontSize: 20))),
+                  ),
+                  Container(
+                    width: 160,
+                    color: Colors.orange,
+                    child: const Center(child: Text('Elemento 4', style: TextStyle(color: Colors.white, fontSize: 20))),
+                  ),
+                  Container(
+                    width: 160,
+                    color: Colors.purple,
+                    child: const Center(child: Text('Elemento 5', style: TextStyle(color: Colors.white, fontSize: 20))),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+
     );
   }
 }
