@@ -5,26 +5,30 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_taller1/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Navigation and Counter test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Wait for the widget to settle
+    await tester.pumpAndSettle();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Verify that we're on the home screen
+    expect(find.text('Taller 1 - Navegación'), findsOneWidget);
+    
+    // Test lifecycle card elements
+    expect(find.text('Ciclo de Vida del Widget'), findsOneWidget);
+    expect(find.text('Trigger setState'), findsOneWidget);
+    
+    // Tap the setState trigger button
+    await tester.tap(find.text('Trigger setState'));
     await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    
+    // Verify lifecycle card updated
+    expect(find.textContaining('setState llamado'), findsOneWidget);
   });
 }
