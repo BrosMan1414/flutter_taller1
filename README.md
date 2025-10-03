@@ -1,214 +1,112 @@
-# Flutter Taller 1 - Navegación y Widgets
+# Flutter - Manejo de asincronía, Timer e Isolates
 
-## Descripción
+Este proyecto demuestra el uso de las principales herramientas de Flutter para manejar procesos asíncronos y tareas pesadas sin bloquear la interfaz de usuario (UI).
 
-Este proyecto es una aplicación Flutter que demuestra la navegación entre pantallas usando go_router, implementación de diferentes widgets nativos, y evidencia del ciclo de vida de los widgets con logs detallados en consola.
+---
 
-## Arquitectura y Navegación
+## 1. Future / async / await
 
-### Rutas Definidas
+- **Cuándo usarlo**:  
+  Cuando se necesita ejecutar una operación asíncrona que puede tardar, como una consulta a una API, lectura de base de datos o simulación de carga de datos.
 
-La aplicación utiliza **go_router** como sistema de navegación con las siguientes rutas:
+- **Cómo funciona**:  
+  - `Future` representa una operación que se completará en el futuro.  
+  - `async/await` permite escribir código asíncrono de manera más legible.  
+  - Mientras la operación se completa, la UI no se bloquea.  
 
-```dart
-// Ruta principal
-'/' → HomeScreen
+- **Ejemplo en el proyecto**:  
+  Simulación de consulta de datos con `Future.delayed`.  
+  La pantalla muestra estados: **Cargando... / Éxito / Error**.
 
-// Ruta de detalles con parámetro
-'/details/:itemId' → DetailsScreen
+---
 
-// Ruta de tabs
-'/tabs' → TabsScreen
+## 2. Timer
+
+- **Cuándo usarlo**:  
+  Cuando se necesita ejecutar algo repetidamente en intervalos de tiempo (cronómetro, cuenta regresiva) o retrasar una acción.
+
+- **Cómo funciona**:  
+  - `Timer` ejecuta una acción después de un tiempo.  
+  - `Timer.periodic` ejecuta acciones repetidas cada cierto intervalo.  
+  - Se debe cancelar con `.cancel()` para liberar recursos.  
+
+- **Ejemplo en el proyecto**:  
+  Un cronómetro con botones de **Iniciar, Pausar, Reanudar y Reiniciar**, actualizando la UI cada segundo.
+
+---
+
+## 3. Isolate
+
+- **Cuándo usarlo**:  
+  Cuando se requiere ejecutar una tarea **CPU-bound** (intensiva en procesamiento) como cálculos matemáticos complejos, generación de datos grandes o compresión.
+
+- **Cómo funciona**:  
+  - Flutter corre en un solo hilo principal que maneja la UI.  
+  - Los **Isolates** permiten ejecutar tareas pesadas en un hilo separado.  
+  - La comunicación entre isolates se hace por **mensajes** con `SendPort` y `ReceivePort`.  
+
+- **Ejemplo en el proyecto**:  
+  Cálculo de Fibonacci con `Isolate.spawn`.  
+  El resultado se envía como mensaje de regreso al hilo principal y se muestra en la UI.
+
+---
+
+## 4. Pantallas y flujos implementados
+
+### Lista de pantallas
+- **HomeScreen**: pantalla inicial con navegación hacia los ejemplos.
+- **FutureView**: demostración de carga de datos simulada con `Future` y `async/await`.
+- **TimerView**: cronómetro con control mediante `Timer`.
+- **IsolateView**: cálculo de Fibonacci en un isolate para evitar bloquear la UI.
+
+---
+
+## 5. Diagramas de flujos
+
+### Flujo del Timer
+```mermaid
+flowchart TD
+    A[Usuario abre TimerView] --> B[Pulsa Iniciar]
+    B --> C[Timer.periodic cada 1s]
+    C --> D[Actualiza contador en la UI]
+    D -->|Pausa| E[Cancelar Timer]
+    D -->|Reanudar| C
+    D -->|Reiniciar| F[Contador = 0]
+    F --> B
 ```
 
-### Envío de Parámetros
+---
+### Flujo de Isolate
 
-#### 1. Parámetros de Ruta (Path Parameters)
-```dart
-// Definición en GoRouter
-'/details/:itemId'
-
-// Navegación desde código
-context.go('/details/1')           // GO - Reemplaza historial
-context.push('/details/2')         // PUSH - Mantiene historial
-context.pushReplacement('/details/3') // REPLACE - Reemplaza pantalla actual
-
-// Obtención del parámetro
-final itemId = GoRouterState.of(context).pathParameters['itemId']!;
+```mermaid
+flowchart TD
+    A[Usuario abre IsolateView] --> B[Pulsa Calcular Fibonacci]
+    B --> C[Crear ReceivePort]
+    C --> D[Lanzar Isolate con Isolate.spawn]
+    D --> E[Isolate calcula Fibonacci]
+    E --> F[Isolate envía resultado con SendPort]
+    F --> G[ReceivePort recibe mensaje]
+    G --> H[UI actualiza con setState()]
 ```
 
-#### 2. Parámetros de Query (Query Parameters)
-```dart
-// Navegación con query parameters
-context.go('/details/tutorial-1?from=tabs&tutorial=Flutter')
+---
+### Flujo Asincronía con Future / async / await
 
-// Obtención de query parameters
-final queryParams = GoRouterState.of(context).uri.queryParameters;
-final from = queryParams['from'];
-final tutorial = queryParams['tutorial'];
+```mermaid
+flowchart TD
+    A[initState()] --> B[Llamar obtenerDatos()]
+    B --> C[setState: cargando=true, error=null]
+    C --> D[cargarNombres() con Future.delayed 3s]
+
+    D -->|Error 33% probabilidad| E[throw Exception]
+    D -->|Éxito| F[Retorna lista de nombres]
+
+    E --> G[setState: error=mensaje, cargando=false]
+    F --> H[setState: nombres=lista, cargando=false]
+
+    G --> I[UI: Mostrar error + botón Reintentar]
+    H --> J[UI: Mostrar GridView con personajes]
+    C --> K[UI: CircularProgressIndicator]
+
+    I -->|Reintentar| B
 ```
-
-### Tipos de Navegación
-
-- **GO**: Reemplaza completamente el historial de navegación
-- **PUSH**: Agrega una nueva pantalla al stack, manteniendo el historial
-- **REPLACE**: Reemplaza la pantalla actual sin afectar el resto del historial
-
-## Widgets Implementados
-
-### 1. GridView.builder
-
-**Ubicación**: `HomeScreen`
-**Razón de elección**: 
-- Permite crear una cuadrícula eficiente y personalizable
-- Ideal para mostrar elementos de manera organizada en 2 columnas
-- Construye elementos solo cuando son necesarios (lazy loading)
-- Fácil personalización de espaciado y diseño responsivo
-
-```dart
-GridView.builder(
-  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-    crossAxisCount: 2,
-    childAspectRatio: 1.0,
-    crossAxisSpacing: 10.0,
-    mainAxisSpacing: 10.0,
-  ),
-  itemCount: 6,
-  itemBuilder: (context, index) => // Widget personalizado
-)
-```
-
-### 2. TabBar con TabController
-
-**Ubicación**: `TabsScreen`
-**Razón de elección**:
-- Proporciona navegación por pestañas nativa de Material Design
-- Permite organizar contenido relacionado en diferentes secciones
-- TabController ofrece control programático sobre las pestañas
-- Integración perfecta con el sistema de navegación de Flutter
-
-```dart
-TabController _tabController = TabController(length: 3, vsync: this);
-
-TabBar(
-  controller: _tabController,
-  tabs: [
-    Tab(text: 'Info'),
-    Tab(text: 'Lista'),
-    Tab(text: 'Config'),
-  ],
-)
-```
-
-### 3. Widget Personalizado (LifecycleCard)
-
-**Ubicación**: `lib/widgets/lifecycle_card.dart`
-**Razón de elección**:
-- Demuestra la creación de widgets reutilizables
-- Encapsula funcionalidad específica del ciclo de vida
-- Permite mostrar de manera interactiva los métodos del ciclo de vida
-- Ejemplo práctico de StatefulWidget con gestión de estado
-
-```dart
-class LifecycleCard extends StatefulWidget {
-  // Widget personalizado que demuestra el ciclo de vida
-  // con botones interactivos y contador de rebuilds
-}
-```
-
-## Evidencia del Ciclo de Vida
-
-### Métodos Implementados
-
-Todos los StatefulWidgets del proyecto implementan los siguientes métodos con logs detallados:
-
-#### 1. initState()
-- Se ejecuta **UNA SOLA VEZ** cuando se crea el widget
-- Utilizado para inicialización de controladores y configuración inicial
-
-#### 2. didChangeDependencies()
-- Se ejecuta después de initState() y cuando cambian las dependencias del widget
-- Útil para configuraciones que dependen del contexto
-
-#### 3. build()
-- Se ejecuta **CADA VEZ** que el widget necesita reconstruirse
-- Incluye contador de reconstrucciones en LifecycleCard
-
-#### 4. setState()
-- Método que fuerza la reconstrucción del widget
-- Logs detallados muestran qué cambios provocaron la actualización
-
-#### 5. dispose()
-- Se ejecuta **UNA VEZ** cuando el widget se destruye
-- Utilizado para liberar recursos y limpiar controladores
-
-### Logs en Consola
-
-Los logs siguen este formato para fácil identificación:
-```
-WidgetName: methodName() - descripción detallada
-```
-
-Ejemplos:
-```
-HomeScreen: initState() ejecutado
-DetailsScreen: setState() llamado - Contador: 1 → 2
-TabsScreen: dispose() - Widget destruido
-LifecycleCard: build() ejecutado (#3)
-```
-
-## Características Adicionales
-
-### Contador Persistente
-- Los contadores de visualización se mantienen entre navegaciones
-- Implementado usando un Map estático para persistencia de datos
-- Cada elemento tiene su propio contador independiente
-
-### Navegación Demostrativa
-- Botones específicos para mostrar diferencias entre GO, PUSH y REPLACE
-- Nota explicativa con bombillo: 💡 Observa el comportamiento del botón "atrás"
-
-### Interfaz Limpia
-- Diseño Material 3 consistente
-- Cards con elevación y colores temáticos
-- Disposición responsiva y accesible
-
-## Estructura del Proyecto
-
-```
-lib/
-├── main.dart                 # Configuración de la app y rutas
-├── screens/
-│   ├── home_screen.dart      # Pantalla principal con GridView
-│   ├── details_screen.dart   # Pantalla de detalles con parámetros
-│   └── tabs_screen.dart      # Pantalla con TabBar
-└── widgets/
-    └── lifecycle_card.dart   # Widget personalizado
-```
-
-## Dependencias Principales
-
-- **flutter**: Framework principal
-- **go_router**: ^16.2.1 - Sistema de navegación declarativo
-- **material**: Componentes de Material Design
-
-## Ejecución
-
-```bash
-# Instalar dependencias
-flutter pub get
-
-# Ejecutar en modo debug
-flutter run
-
-# Ejecutar tests
-flutter test
-```
-
-## Observaciones de Desarrollo
-
-1. **Navegación**: Se eligió go_router por su enfoque declarativo y manejo robusto de parámetros
-2. **Widgets**: Cada widget fue seleccionado por su propósito específico y facilidad de uso
-3. **Ciclo de Vida**: Los logs proporcionan visibilidad completa del comportamiento interno de Flutter
-4. **Arquitectura**: Separación clara entre pantallas y widgets reutilizables
-   
