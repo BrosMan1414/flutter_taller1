@@ -64,49 +64,48 @@ Este proyecto demuestra el uso de las principales herramientas de Flutter para m
 ## 5. Diagramas de flujos
 
 ### Flujo del Timer
+
 ```mermaid
 flowchart TD
-    A[Usuario abre TimerView] --> B[Pulsa Iniciar]
-    B --> C[Timer.periodic cada 1s]
-    C --> D[Actualiza contador en la UI]
-    D -->|Pausa| E[Cancelar Timer]
-    D -->|Reanudar| C
-    D -->|Reiniciar| F[Contador = 0]
-    F --> B
+    A[Usuario abre TimerView] --> B[Pulsa Iniciar]
+    B --> C[Timer.periodic cada 1s]
+    C --> D[Actualiza contador en la UI]
+    D -->|Pausa| E[Cancelar Timer]
+    D -->|Reanudar| C
+    D -->|Reiniciar| F[Contador = 0]
+    F --> B
 ```
 
 ---
+
 ### Flujo de Isolate
 
 ```mermaid
 flowchart TD
-    A[Usuario abre IsolateView] --> B[Pulsa Calcular Fibonacci]
-    B --> C[Crear ReceivePort]
-    C --> D[Lanzar Isolate con Isolate.spawn]
-    D --> E[Isolate calcula Fibonacci]
-    E --> F[Isolate envía resultado con SendPort]
-    F --> G[ReceivePort recibe mensaje]
-    G --> H[UI actualiza con setState()]
+  A[Usuario abre IsolateView] --> B[Pulsa Calcular Fibonacci]
+  B --> C[Crear ReceivePort]
+  C --> D[Lanzar Isolate con Isolate.spawn]
+  D --> E[Isolate ejecuta calculo de Fibonacci]
+  E --> F[Isolate envia resultado con SendPort]
+  F --> G[ReceivePort recibe mensaje]
+  G --> H[UI actualiza con setState]
 ```
 
 ---
+
 ### Flujo Asincronía con Future / async / await
 
 ```mermaid
 flowchart TD
-    A[initState()] --> B[Llamar obtenerDatos()]
-    B --> C[setState: cargando=true, error=null]
-    C --> D[cargarNombres() con Future.delayed 3s]
-
-    D -->|Error 33% probabilidad| E[throw Exception]
-    D -->|Éxito| F[Retorna lista de nombres]
-
-    E --> G[setState: error=mensaje, cargando=false]
-    F --> H[setState: nombres=lista, cargando=false]
-
-    G --> I[UI: Mostrar error + botón Reintentar]
-    H --> J[UI: Mostrar GridView con personajes]
-    C --> K[UI: CircularProgressIndicator]
-
-    I -->|Reintentar| B
+  A[initState] --> B[Llamar obtenerDatos]
+  B --> C[setState cargando=true, error=null]
+  C --> D[cargarNombres con Future delayed 3s]
+  D -->|Error 33pc| E[lanza Exception]
+  D -->|Exito| F[Retorna lista de nombres]
+  E --> G[setState error=mensaje, cargando=false]
+  F --> H[setState nombres=lista, cargando=false]
+  G --> I[UI: mostrar error + boton Reintentar]
+  H --> J[UI: mostrar GridView con personajes]
+  C --> K[UI: CircularProgressIndicator]
+  I -->|Reintentar| B
 ```
