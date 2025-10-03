@@ -1,6 +1,6 @@
 name: flutter_taller1
-description: "Taller de navegación con go_router y ciclo de vida"
-publish_to: 'none' 
+description: "A new Flutter project."
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -10,19 +10,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  go_router: 16.2.1
-
   cupertino_icons: ^1.0.8
+  go_router: ^16.2.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^5.0.0
 
 flutter:
-
   uses-material-design: true
-
-  assets:
-  - assets/
