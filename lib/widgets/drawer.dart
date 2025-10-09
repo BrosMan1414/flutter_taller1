@@ -49,23 +49,35 @@ class AppDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.timer, color: scheme.onSurface),
-              title: Text(
-                'Timer',
-                style: TextStyle(color: scheme.onSurface),
-              ),
+              title: Text('Timer', style: TextStyle(color: scheme.onSurface)),
               onTap: () {
                 context.go('/timer');
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              leading: Icon(Icons.add_circle_outline_sharp, color: scheme.onSurface),
+              leading: Icon(
+                Icons.add_circle_outline_sharp,
+                color: scheme.onSurface,
+              ),
               title: Text(
                 'Isolates',
                 style: TextStyle(color: scheme.onSurface),
               ),
               onTap: () {
                 context.go('/isolate');
+                Navigator.pop(context);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: Icon(Icons.sailing, color: scheme.onSurface),
+              title: Text(
+                'One Piece - Listado',
+                style: TextStyle(color: scheme.onSurface),
+              ),
+              onTap: () {
+                context.go('/onepiece');
                 Navigator.pop(context);
               },
             ),

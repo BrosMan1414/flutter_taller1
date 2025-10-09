@@ -1,6 +1,8 @@
-# Flutter - Manejo de asincronía, Timer e Isolates
+# Flutter - OnePieceQL + Asincronía, Timer e Isolates
 
 Este proyecto demuestra el uso de las principales herramientas de Flutter para manejar procesos asíncronos y tareas pesadas sin bloquear la interfaz de usuario (UI).
+
+Además, integra un ejemplo de consumo GraphQL con la API pública OnePieceQL para listar personajes y ver su detalle.
 
 ---
 
@@ -58,6 +60,8 @@ Este proyecto demuestra el uso de las principales herramientas de Flutter para m
 - **FutureView**: demostración de carga de datos simulada con `Future` y `async/await`.
 - **TimerView**: cronómetro con control mediante `Timer`.
 - **IsolateView**: cálculo de Fibonacci en un isolate para evitar bloquear la UI.
+ - **Listado One Piece**: consume OnePieceQL y lista personajes (avatar + datos).
+ - **Detalle One Piece**: muestra la información ampliada del personaje seleccionado.
 
 ---
 
@@ -109,3 +113,67 @@ flowchart TD
   C --> K[UI: CircularProgressIndicator]
   I -->|Reintentar| B
 ```
+
+---
+
+## 6. OnePieceQL (GraphQL)
+
+- Endpoint usado: https://onepieceql.up.railway.app/graphql (método POST)
+- Query utilizada para el listado:
+
+```
+query Characters {
+  characters {
+    results {
+      englishName
+      age
+      birthday
+      bounty
+      devilFruitName
+      avatarSrc
+    }
+  }
+}
+```
+
+- Fragmento de respuesta JSON esperado:
+
+```
+{
+  "data": {
+    "characters": {
+      "results": [
+        {
+          "englishName": "Monkey D. Luffy",
+          "age": 19,
+          "birthday": "May 5",
+          "bounty": "3,000,000,000",
+          "devilFruitName": "Gomu Gomu no Mi",
+          "avatarSrc": "https://.../luffy.jpg"
+        }
+      ]
+    }
+  }
+}
+```
+
+### Arquitectura
+
+- `lib/models/character.dart`: modelo de datos con `fromMap`.
+- `lib/services/one_piece_service.dart`: servicio HTTP que envía la query GraphQL.
+- `lib/views/onepiece/listado_view.dart`: pantalla con `FutureBuilder` y estados de carga/éxito/error.
+- `lib/views/onepiece/detalle_view.dart`: recibe el `Character` por navegación y muestra el detalle.
+- `lib/routes/app_router.dart`: rutas con `go_router` (onepiece_list, onepiece_detail).
+- `lib/widgets/drawer.dart`: acceso al listado.
+
+### Navegación con go_router
+
+- A detalle desde el listado:
+  - `context.pushNamed('onepiece_detail', extra: character)`
+- En la ruta de detalle se recibe el objeto desde `state.extra` y se construye `DetalleView(character: ...)`.
+
+### Estados y manejo de errores
+
+- `FutureBuilder` en Listado: muestra `CircularProgressIndicator` mientras carga, lista en éxito, y mensaje con botón “Reintentar” en error.
+- El servicio valida `statusCode` y errores de GraphQL (clave `errors`).
+- No se realizan llamadas HTTP dentro de `build()`; se disparan en `initState()` o a través del `Future` almacenado.
