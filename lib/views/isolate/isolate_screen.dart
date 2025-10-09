@@ -66,7 +66,10 @@ class _IsolateViewState extends State<IsolateView> {
             else if (_resultado != null)
               Text(
                 "Resultado: $_resultado",
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               )
             else
               const Text(
