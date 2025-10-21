@@ -3,6 +3,12 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    // Aplicar Google Services (solo una declaración). Mantener la versión en el buildscript si es necesario.
+    id("com.google.gms.google-services") version "4.4.4" apply false
+}
+
+dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:34.4.0"))
 }
 
 android {
