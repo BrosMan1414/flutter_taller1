@@ -166,6 +166,72 @@ query Characters {
 - `lib/routes/app_router.dart`: rutas con `go_router` (onepiece_list, onepiece_detail).
 - `lib/widgets/drawer.dart`: acceso al listado.
 
+---
+
+## Publicación y distribución (Firebase App Distribution)
+
+Breve explicación del flujo
+
+Generar APK → App Distribution → Testers → Instalación → Actualización
+
+Sección "Publicación" (pasos resumidos)
+
+- Generar el artefacto de release:
+  - APK: `flutter build apk --release` → `build/app/outputs/flutter-apk/app-release.apk`
+  - AAB: `flutter build appbundle --release` → `build/app/outputs/bundle/release/app-release.aab`
+- Subir a App Distribution (opciones):
+  - Consola: Firebase Console → App Distribution → Distribuir nueva versión → subir APK/AAB → seleccionar testers/grupos → publicar.
+  - CLI: con `firebase-tools` ejecutar (ejemplo):
+
+```powershell
+firebase appdistribution:distribute build\app\outputs\flutter-apk\app-release.apk --app YOUR_FIREBASE_APP_ID --project YOUR_PROJECT_ID --groups "QA_Clase" --release-notes "Notas de la release"
+```
+
+- Notificar a los testers y verificar la instalación en dispositivos.
+
+Cómo replicar el proceso en el equipo
+
+1. Compartir el `App ID` y permisos de Firebase (o `--project` alias) con el equipo.
+2. Cada desarrollador puede generar el APK/AAB con `flutter build` y usar la consola o CLI para subir.
+3. En CI (opcional) crear un Service Account con permisos de App Distribution y usar su key JSON en el pipeline para ejecutar el mismo comando CLI.
+
+Notas sobre versionado
+
+- Formato en Flutter (pubspec.yaml): `version: <versionName>+<versionCode>` por ejemplo `version: 1.0.1+2`.
+- Buenas prácticas:
+  - Incrementar `versionCode` en cada build que publiques para evitar conflictos.
+  - Mantener `versionName` legible (semver o similar).
+
+Formato sugerido de Release Notes
+
+- Título breve (línea 1)
+- Lista corta de cambios (bullets): características, correcciones, bloqueos conocidos.
+- Instrucciones de prueba (pasos rápidos para el tester).
+- Referencias a issues o tickets (ej: #1234).
+
+Ejemplo:
+
+```
+Versión 1.0.1+2
+- Corrección: carga de perfil en background.
+- Mejora: reducción del tiempo de inicialización.
+- Nota: desactivar modo depuración antes de instalar.
+
+Pasos de prueba:
+1. Abrir la app.
+2. Ir a Perfil → Actualizar.
+
+Issue relacionado: #42
+```
+
+Capturas / GIFs
+
+- Puedes añadir capturas o GIFs breves del panel de App Distribution o del proceso de instalación. Si prefieres, agrégalos en un PDF y enlázalos aquí en el README (p. ej. `docs/releases/release_1_0_1.pdf`).
+
+---
+
+Si necesitas, genero un script PowerShell que automatice "build + upload" usando `--app` y `--project`, o preparo un ejemplo de pipeline (GitHub Actions) para que el equipo lo replique.
+
 ### Navegación con go_router
 
 - A detalle desde el listado:
