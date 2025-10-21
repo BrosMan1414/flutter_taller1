@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "84977999168",
+    "project_id": "menuderestaurante-rya3y5",
+    "storage_bucket": "menuderestaurante-rya3y5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:84977999168:android:c8eddec53c630125b8eea5",
+        "android_client_info": {
+          "package_name": "com.example.flutter_taller1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwuiT8dHD-x5dRn77_EQIp_iufRc5N5jQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
