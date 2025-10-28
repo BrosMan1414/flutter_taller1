@@ -81,6 +81,29 @@ class AppDrawer extends StatelessWidget {
                 Navigator.pop(context);
               },
             ),
+            const Divider(),
+            ListTile(
+              leading: Icon(Icons.login, color: scheme.onSurface),
+              title: Text(
+                'Login (JWT)',
+                style: TextStyle(color: scheme.onSurface),
+              ),
+              onTap: () {
+                context.go('/login');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.verified_user, color: scheme.onSurface),
+              title: Text(
+                'Evidencia (Sesión)',
+                style: TextStyle(color: scheme.onSurface),
+              ),
+              onTap: () {
+                context.go('/evidence');
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
       ),
