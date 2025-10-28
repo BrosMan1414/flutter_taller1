@@ -7,6 +7,9 @@ import '../views/isolate/isolate_screen.dart';
 import '../views/onepiece/listado_view.dart';
 import '../views/onepiece/detalle_view.dart';
 import '../models/character.dart';
+// JWT module views
+import '../modules/jwt/views/login_screen.dart';
+import '../modules/jwt/views/evidence_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
@@ -36,6 +39,16 @@ final GoRouter appRouter = GoRouter(
       path: '/onepiece',
       name: 'onepiece_list',
       builder: (context, state) => const ListadoView(),
+    ),
+    GoRoute(
+      path: '/login',
+      name: 'jwt_login',
+      builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/evidence',
+      name: 'jwt_evidence',
+      builder: (context, state) => const EvidenceScreen(),
     ),
     GoRoute(
       path: '/onepiece/detail',
