@@ -4,6 +4,12 @@ Este proyecto demuestra el uso de las principales herramientas de Flutter para m
 
 Además, integra un ejemplo de consumo GraphQL con la API pública OnePieceQL para listar personajes y ver su detalle.
 
+## Breve descripción técnica
+
+- Arquitectura: Flutter con `Provider` para estado (AuthProvider), separación en capas: `models/` (data models), `modules/*/services` (servicios como `AuthService`, `UniversityService`), `modules/*/views` (pantallas), y `routes/app_router.dart` usando `go_router` para la navegación. Se usan servicios HTTP (`http`) para APIs externas y `cloud_firestore` para persistencia en tiempo real.
+- Estado del desarrollo: módulo JWT (autenticación contra API pública) implementado; módulo Firebase (`universidades`) implementado con CRUD básico y listado en tiempo real. Integración y pruebas locales realizadas en emulador; ajustes finales pendientes: limpieza de versiones de dependencias y reglas de Firestore en producción.
+- Validaciones y manejo de errores: formularios con validadores (campos obligatorios, validación de URL), validación de respuestas del backend (manejo de HTTP 422 con mensajes por campo), y detección de errores de Firestore (permission-denied) con mensajes y guía para corrección de reglas. Uso de `flutter_secure_storage` para tokens y `shared_preferences` para datos no sensibles.
+
 ---
 
 ## 1. Future / async / await
