@@ -104,6 +104,17 @@ class AppDrawer extends StatelessWidget {
                 Navigator.pop(context);
               },
             ),
+            ListTile(
+              leading: Icon(Icons.school, color: scheme.onSurface),
+              title: Text(
+                'Universidades',
+                style: TextStyle(color: scheme.onSurface),
+              ),
+              onTap: () {
+                context.go('/universidades');
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
       ),

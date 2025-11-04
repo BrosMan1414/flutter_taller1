@@ -10,6 +10,9 @@ import '../models/character.dart';
 // JWT module views
 import '../modules/jwt/views/login_screen.dart';
 import '../modules/jwt/views/evidence_screen.dart';
+// Firebase universidades
+import '../modules/firebase_universities/views/universities_list_screen.dart';
+import '../modules/firebase_universities/university_service.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
@@ -61,6 +64,12 @@ final GoRouter appRouter = GoRouter(
         }
         return DetalleView(character: extra);
       },
+    ),
+    GoRoute(
+      path: '/universidades',
+      name: 'universidades',
+      builder: (context, state) =>
+          UniversitiesListScreen(service: UniversityService()),
     ),
   ],
 );
